@@ -6,14 +6,25 @@ import logo from "./img/logo.png";
 const {Item} = Form
 
 export default class Login extends Component{
-  onFinish = () =>{
-    //用户名和密码的合法性要求
-    //1、必须输入
-    //2、必须大于四位
-    //3、必须小于12位
-    //4、必须是英文，数字或下划线组成
-    alert("dianle")
+  onFinish = (value,err) =>{
+    ///提交表单，现在是发ajax请求，如果不是的话自己要阻止默认提交事情，自己发ajax请求
+    console.log(value,err);
   }
+ //密码验证,自定义验证
+  pwdValidator = (rule, value) =>{
+    if (!value) {
+      return Promise.reject('必须输入密码');
+    }else if(value.length > 12){
+      return Promise.reject('密码必须小于12位');
+    }else if(value.length < 4){
+      return Promise.reject('密码必须大于4位');
+    }else if(!(/^\w+$/).test(value)){
+      return Promise.reject('必须是英文，数字或下划线组成');
+    }
+    return Promise.resolve();
+  }
+
+
 
 
 
@@ -41,13 +52,17 @@ export default class Login extends Component{
                   { min: 4, message: '用户名必须大于4位!'},
                   { pattern: /^\w+$/, message: '用户名必须由英文、字母和下划线组成!'}
                 ]}
+                validateTrigger='onSubmit'//提交代码才会触发规则
               >
                 <Input prefix={<UserOutlined className="site-form-item-icon" style={{color:  'rgba(0, 0, 0, 0.25)'}}/> } placeholder="Username" 
                 />
               </Item>
               <Item
                 name="password"
-                rules={[{ required: true, message: 'Please input your Password!' }]}
+                rules={[
+                  { validator: this.pwdValidator},
+                ]} 
+                validateTrigger='onSubmit'//提交代码才会触发规则
               >
                 <Input
                   prefix={<LockOutlined className="site-form-item-icon" style={{color:  'rgba(0, 0, 0, 0.25)'}}/>}
