@@ -1,43 +1,41 @@
-import React, {Component} from "react";
+import React, {Component} from "react"
+import { createIncrementAction,createDecrementAction } from "./redux/reducer_actions";
 
 
 export default class App extends Component{
-  state =  {
-    count:0
-  }
 //加法
   increment = () =>{
-    let {value} = this.refs.selectNumber
-    let {count} = this.state
-    this.setState({count: count + value*1})
+    const {value} = this.refs.selectNumber
+    this.props.store.dispatch(function name(value) {
+      return {type:"Increment",data:value}
+    }(value*1))
   }
-
+  
   //减法
   decrement = () =>{
-    let {value} = this.refs.selectNumber
-    let {count} = this.state
-    this.setState({count: count - value*1})
+    const {value} = this.refs.selectNumber
+    this.props.store.dispatch(createDecrementAction(value*1))
   }
 
   //偶数添加
   incrementIfOdd = () =>{
     let {value} = this.refs.selectNumber
-    let {count} = this.state
-    if(count % 2 === 1){
-      this.setState({count: count + value*1})
+    let count = this.props.store.getState()
+    if(count%2 === 1){
+      this.props.store.dispatch(createIncrementAction(value*1))
     }
   }
 //异步相加
   incrementAsync = () =>{
     let {value} = this.refs.selectNumber
-    let {count} = this.state
-    setTimeout(() => {
-      this.setState({count: count + value*1})
-    },1000);
+    setTimeout(()=>{
+      this.props.store.dispatch(createIncrementAction(value*1))
+   },1000)
   }
 
   render(){
-    let {count} = this.state 
+    let count = this.props.store.getState()
+    console.log(count);
     return(
       <div>
         <h3>当前计数为：{count}</h3>
