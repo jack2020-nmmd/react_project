@@ -1,11 +1,16 @@
 import React, {Component} from 'react'
 import { Form, Input, Button} from 'antd';
+import { connect } from "react-redux";
+import { createDemo1Action, createDemo2Action } from "../../redux/action_creators/test_action";
 import { UserOutlined, LockOutlined} from '@ant-design/icons';
 import "./css/login.less";
 import logo from "./img/logo.png";
 const {Item} = Form
-
-export default class Login extends Component{
+//本来是一般组件的，但是用了redux后分了容器组件和UI组件，它使用了connect变为容器组件
+class Login extends Component{
+  componentDidMount(){
+    console.log(this.props);
+  }
   onFinish = (value,err) =>{
     ///提交表单，现在是发ajax请求，如果不是的话自己要阻止默认提交事情，自己发ajax请求
     console.log(value,err);
@@ -84,3 +89,11 @@ export default class Login extends Component{
     )
   }
 }
+
+export default connect(
+  state => ({test:state.test}),
+  {
+    demo1:createDemo1Action,
+    demo2:createDemo2Action,
+  }
+)(Login)
